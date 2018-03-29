@@ -7,7 +7,7 @@ def staging():
     basepath = '/srv/{{ cookiecutter.project_slug }}.brueck.io/%s'
     env.hosts = ['{0}@{0}.brueck.io'.format(projectname)]
     env.path = basepath % projectname
-    env.virtualenv_path = basepath % (projectname+'env')
+    env.virtualenv_path = basepath % (projectname + 'env')
     env.push_branch = 'staging'
     env.push_remote = 'origin'
     env.reload_cmd = 'supervisorctl restart {0}'.format(projectname)
@@ -19,7 +19,7 @@ def production():
     basepath = '/home/{{ cookiecutter.project_slug }}/%s'
     env.hosts = ['{{ cookiecutter.project_slug }}@server.{{ cookiecutter.domain_name }}']
     env.path = basepath % projectname
-    env.virtualenv_path = basepath % (projectname+'env')
+    env.virtualenv_path = basepath % (projectname + 'env')
     env.push_branch = 'master'
     env.push_remote = 'origin'
     env.after_deploy_url = 'http://{{ cookiecutter.domain_name }}'
