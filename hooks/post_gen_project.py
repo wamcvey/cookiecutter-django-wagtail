@@ -228,17 +228,10 @@ def remove_celery_compose_dirs():
 
 
 def main():
-    postgres_user = generate_postgres_user()
-    set_flags_in_envs(postgres_user)
-    set_flags_in_settings_files()
-
     if '{{ cookiecutter.open_source_license }}' == 'Not open source':
         remove_open_source_files()
     if '{{ cookiecutter.open_source_license}}' != 'GPLv3':
         remove_gplv3_files()
-
-    append_to_gitignore_file('.env')
-    append_to_gitignore_file('.envs/*')
 
     if '{{ cookiecutter.js_task_runner}}'.lower() == 'gulp':
         remove_grunt_files()

@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class UsersConfig(AppConfig):
+class CoreConfig(AppConfig):
     name = '{{cookiecutter.project_slug}}.core'
     verbose_name = "Core"
 

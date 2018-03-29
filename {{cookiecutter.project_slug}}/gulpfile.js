@@ -10,9 +10,6 @@ var gulp = require('gulp'),
       sass = require('gulp-sass'),
       autoprefixer = require('gulp-autoprefixer'),
       cssnano = require('gulp-cssnano'),
-      {% if cookiecutter.custom_bootstrap_compilation == 'y' %}
-      concat = require('gulp-concat'),
-      {% endif %}
       rename = require('gulp-rename'),
       del = require('del'),
       plumber = require('gulp-plumber'),
@@ -31,14 +28,6 @@ var pathsConfig = function (appName) {
   var vendorsRoot = 'node_modules/';
 
   return {
-    {% if cookiecutter.custom_bootstrap_compilation == 'y' %}
-    bootstrapSass: vendorsRoot + '/bootstrap/scss',
-    vendorsJs: [
-      vendorsRoot + 'jquery/dist/jquery.slim.js',
-      vendorsRoot + 'popper.js/dist/umd/popper.js',
-      vendorsRoot + 'bootstrap/dist/js/bootstrap.js'
-    ],
-    {% endif %}
     app: this.app,
     templates: this.app + '/templates',
     css: this.app + '/static/css',
@@ -60,9 +49,6 @@ gulp.task('styles', function() {
   return gulp.src(paths.sass + '/project.scss')
     .pipe(sass({
       includePaths: [
-        {% if cookiecutter.custom_bootstrap_compilation == 'y' %}
-        paths.bootstrapSass,
-        {% endif %}
         paths.sass
       ]
     }).on('error', sass.logError))
@@ -84,19 +70,6 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest(paths.js));
 });
 
-
-{% if cookiecutter.custom_bootstrap_compilation == 'y' %}
-// Vendor Javascript minification
-gulp.task('vendor-scripts', function() {
-  return gulp.src(paths.vendorsJs)
-    .pipe(concat('vendors.js'))
-    .pipe(gulp.dest(paths.js))
-    .pipe(plumber()) // Checks for errors
-    .pipe(uglify()) // Minifies the js
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(gulp.dest(paths.js));
-});
-{% endif %}
 
 // Image compression
 gulp.task('imgCompression', function(){
@@ -134,5 +107,5 @@ gulp.task('watch', function() {
 
 // Default task
 gulp.task('default', function() {
-    runSequence(['styles', 'scripts', {% if cookiecutter.custom_bootstrap_compilation == 'y' %}'vendor-scripts', {% endif %}'imgCompression'], ['runServer', 'browserSync', 'watch']);
+    runSequence(['styles', 'scripts', 'imgCompression'], ['runServer', 'browserSync', 'watch']);
 });

@@ -1,4 +1,4 @@
-Pillow==5.0.0  # https://github.com/python-pillow/Pillow
+pip # get rid of annoying pip messages
 
 # Django
 # ------------------------------------------------------------------------------
@@ -11,4 +11,5 @@ django-compressor==2.2  # https://github.com/django-compressor/django-compressor
 {%- if cookiecutter.use_wagtail == "y" %}
 # Wagtail
 wagtail==2.0
+wagtailfontawesome==1.1.3
 {%- endif %}

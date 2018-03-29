@@ -60,9 +60,6 @@ module.exports = function (grunt) {
       dev: {
           options: {
               outputStyle: 'nested',
-{% if cookiecutter.custom_bootstrap_compilation == 'y' %}
-              includePaths: ['node_modules/bootstrap/scss'],
-{% endif %}
               sourceMap: false,
               precision: 10
           },
@@ -73,9 +70,6 @@ module.exports = function (grunt) {
       dist: {
           options: {
               outputStyle: 'compressed',
-{% if cookiecutter.custom_bootstrap_compilation == 'y' %}
-              includePaths: ['node_modules/bootstrap/scss'],
-{% endif %}
               sourceMap: false,
               precision: 10
           },
@@ -118,16 +112,10 @@ module.exports = function (grunt) {
       runDjango: {
         cmd: 'python <%= paths.manageScript %> runserver'
       },
-      {% if cookiecutter.use_mailhog == "y" and cookiecutter.use_docker == 'n' -%}runMailHog: {
-        cmd: './mailhog'
-      },{%- endif %}
     }
   });
 
   grunt.registerTask('serve', [
-    {% if cookiecutter.use_mailhog == "y" and cookiecutter.use_docker == 'n' -%}
-    'bgShell:runMailHog',
-    {%- endif %}
     'bgShell:runDjango',
     'watch'
   ]);
