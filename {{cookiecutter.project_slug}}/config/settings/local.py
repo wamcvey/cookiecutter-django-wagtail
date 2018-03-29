@@ -31,20 +31,10 @@ TEMPLATES[0]['OPTIONS']['debug'] = DEBUG  # noqa F405
 
 # EMAIL
 # ------------------------------------------------------------------------------
-{% if cookiecutter.use_mailhog == 'y' and cookiecutter.use_docker == 'y' -%}
-# https://docs.djangoproject.com/en/dev/ref/settings/#email-host
-EMAIL_HOST = env('EMAIL_HOST', default='mailhog')
-{%- elif cookiecutter.use_mailhog == 'y' and cookiecutter.use_docker == 'n' -%}
-# https://docs.djangoproject.com/en/dev/ref/settings/#email-host
-EMAIL_HOST = 'localhost'
-{%- else -%}
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-host
 EMAIL_HOST = 'localhost'
-{%- endif %}
-# https://docs.djangoproject.com/en/dev/ref/settings/#email-port
-EMAIL_PORT = 1025
 
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
@@ -61,25 +51,10 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#internal-ips
 INTERNAL_IPS = ['127.0.0.1', '10.0.2.2']
-{% if cookiecutter.use_docker == 'y' -%}
-import socket
-import os
-if os.environ.get('USE_DOCKER') == 'yes':
-    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-    INTERNAL_IPS += [ip[:-1] + '1' for ip in ips]
-{%- endif %}
 
 # django-extensions
 # ------------------------------------------------------------------------------
 # https://django-extensions.readthedocs.io/en/latest/installation_instructions.html#configuration
 INSTALLED_APPS += ['django_extensions']  # noqa F405
-{% if cookiecutter.use_celery == 'y' -%}
-
-# Celery
-# ------------------------------------------------------------------------------
-# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-task_always_eager
-CELERY_ALWAYS_EAGER = True
-
-{%- endif %}
 # Your stuff...
 # ------------------------------------------------------------------------------

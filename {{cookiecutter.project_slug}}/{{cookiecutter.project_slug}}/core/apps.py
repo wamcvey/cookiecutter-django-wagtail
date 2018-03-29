@@ -2,8 +2,8 @@ from django.apps import AppConfig
 
 
 class UsersConfig(AppConfig):
-    name = '{{cookiecutter.project_slug}}.users'
-    verbose_name = "Users"
+    name = '{{cookiecutter.project_slug}}.core'
+    verbose_name = "Core"
 
     def ready(self):
         """Override this to put in:
@@ -11,6 +11,6 @@ class UsersConfig(AppConfig):
             Users signal registration
         """
         try:
-            import users.signals  # noqa F401
+            import core.signals  # noqa F401
         except ImportError:
             pass

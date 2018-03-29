@@ -45,38 +45,6 @@ def remove_gplv3_files():
         os.remove(file_name)
 
 
-def remove_pycharm_files():
-    idea_dir_path = '.idea'
-    if os.path.exists(idea_dir_path):
-        shutil.rmtree(idea_dir_path)
-
-    docs_dir_path = os.path.join('docs', 'pycharm')
-    if os.path.exists(docs_dir_path):
-        shutil.rmtree(docs_dir_path)
-
-
-def remove_docker_files():
-    shutil.rmtree('compose')
-
-    file_names = [
-        'local.yml',
-        'production.yml',
-        '.dockerignore',
-    ]
-    for file_name in file_names:
-        os.remove(file_name)
-
-
-def remove_heroku_files():
-    file_names = [
-        'Procfile',
-        'runtime.txt',
-        'requirements.txt',
-    ]
-    for file_name in file_names:
-        os.remove(file_name)
-
-
 def remove_grunt_files():
     file_names = [
         'Gruntfile.js',
@@ -269,30 +237,8 @@ def main():
     if '{{ cookiecutter.open_source_license}}' != 'GPLv3':
         remove_gplv3_files()
 
-    if '{{ cookiecutter.use_pycharm }}'.lower() == 'n':
-        remove_pycharm_files()
-
-    if '{{ cookiecutter.use_docker }}'.lower() == 'n':
-        remove_docker_files()
-
-    if '{{ cookiecutter.use_heroku }}'.lower() == 'n':
-        remove_heroku_files()
-
-    if '{{ cookiecutter.use_docker }}'.lower() == 'n' and '{{ cookiecutter.use_heroku }}'.lower() == 'n':
-        if '{{ cookiecutter.keep_local_envs_in_vcs }}'.lower() == 'y':
-            print(
-                INFO +
-                ".env(s) are only utilized when Docker Compose and/or "
-                "Heroku support is enabled so keeping them does not "
-                "make sense given your current setup." +
-                TERMINATOR
-            )
-        remove_envs_and_associated_files()
-    else:
-        append_to_gitignore_file('.env')
-        append_to_gitignore_file('.envs/*')
-        if '{{ cookiecutter.keep_local_envs_in_vcs }}'.lower() == 'y':
-            append_to_gitignore_file('!.envs/.local/')
+    append_to_gitignore_file('.env')
+    append_to_gitignore_file('.envs/*')
 
     if '{{ cookiecutter.js_task_runner}}'.lower() == 'gulp':
         remove_grunt_files()
@@ -302,31 +248,6 @@ def main():
         remove_gulp_files()
         remove_grunt_files()
         remove_packagejson_file()
-    if '{{ cookiecutter.js_task_runner }}'.lower() in ['grunt', 'gulp'] \
-        and '{{ cookiecutter.use_docker }}'.lower() == 'y':
-        print(
-            WARNING +
-            "Docker and {} JS task runner ".format(
-                '{{ cookiecutter.js_task_runner }}'
-                    .lower()
-                    .capitalize()
-            ) +
-            "working together not supported yet. "
-            "You can continue using the generated project like you "
-            "normally would, however you would need to add a JS "
-            "task runner service to your Docker Compose configuration "
-            "manually." +
-            TERMINATOR
-        )
-
-    if '{{ cookiecutter.use_celery }}'.lower() == 'n':
-        remove_celery_app()
-        if '{{ cookiecutter.use_docker }}'.lower() == 'y':
-            remove_celery_envs()
-            remove_celery_compose_dirs()
-
-    if '{{ cookiecutter.use_travisci }}'.lower() == 'n':
-        remove_dottravisyml_file()
 
     print(
         SUCCESS +
