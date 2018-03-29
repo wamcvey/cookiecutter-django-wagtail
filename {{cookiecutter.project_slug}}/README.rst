@@ -3,28 +3,16 @@
 
 {{cookiecutter.description}}
 
-.. image:: https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg
-     :target: https://github.com/pydanny/cookiecutter-django/
-     :alt: Built with Cookiecutter Django
 {% if cookiecutter.open_source_license != "Not open source" %}
 
 :License: {{cookiecutter.open_source_license}}
 {% endif %}
-
-Settings
---------
-
-Moved to settings_.
-
-.. _settings: http://cookiecutter-django.readthedocs.io/en/latest/settings.html
 
 Basic Commands
 --------------
 
 Setting Up Your Users
 ^^^^^^^^^^^^^^^^^^^^^
-
-* To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
 
 * To create an **superuser account**, use this command::
 
@@ -63,3 +51,7 @@ Deployment
 ----------
 
 The following details how to deploy this application.
+
+    $ fab production deploy
+or
+    $ fab staging deploy
