@@ -7,6 +7,7 @@ django-environ==0.4.4  # https://github.com/joke2k/django-environ
 {%- if cookiecutter.use_compressor == "y" %}
 django-compressor==2.2  # https://github.com/django-compressor/django-compressor
 {%- endif %}
+argon2-cffi==18.1.0  # https://github.com/hynek/argon2_cffi
 
 {%- if cookiecutter.use_wagtail == "y" %}
 # Wagtail
