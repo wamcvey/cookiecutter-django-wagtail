@@ -57,7 +57,7 @@ gulp.task('styles', function() {
     .pipe(pixrem())  // add fallbacks for rem units
     .pipe(gulp.dest(paths.css))
     .pipe(rename({ suffix: '.min' }))
-    .pipe(cssnano()) // Minifies the result
+    .pipe(cssnano({ zindex: false })) // Minifies the result
     .pipe(gulp.dest(paths.css));
 });
 

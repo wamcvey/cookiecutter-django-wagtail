@@ -14,4 +14,5 @@ whoosh_index/
 !.gitignore
 *.sublime-workspace
 *.sublime-project
+node_modules/
 {{ cookiecutter.project_slug }}/media/
