@@ -2,7 +2,7 @@ pip # get rid of annoying pip messages
 
 # Django
 # ------------------------------------------------------------------------------
-django<2.1  # pyup: < 2.3  # https://www.djangoproject.com/
+django<2.3  # pyup: < 2.3  # https://www.djangoproject.com/
 django-environ==0.4.5  # https://github.com/joke2k/django-environ
 {%- if cookiecutter.use_compressor == "y" %}
 django-compressor==2.2  # https://github.com/django-compressor/django-compressor
