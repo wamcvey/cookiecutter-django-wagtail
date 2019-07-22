@@ -239,5 +239,5 @@ STATICFILES_FINDERS += ['compressor.finders.CompressorFinder']
 
 {% if cookiecutter.use_wagtail == 'y' -%}
 # Wagtail settings
-WAGTAIL_SITE_NAME = "bakerydemo"
+WAGTAIL_SITE_NAME = "{{ cookiecutter.project_name }}"
 {%- endif %}
