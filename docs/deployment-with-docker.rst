@@ -7,8 +7,8 @@ Deployment with Docker
 Prerequisites
 -------------
 
-* Docker 1.10+.
-* Docker Compose 1.6+
+* Docker 17.05+.
+* Docker Compose 1.17+
 
 
 Understanding the Docker Compose Setup
@@ -19,12 +19,15 @@ Before you begin, check out the ``production.yml`` file in the root of this proj
 * ``django``: your application running behind ``Gunicorn``;
 * ``postgres``: PostgreSQL database with the application's relational data;
 * ``redis``: Redis instance for caching;
-* ``caddy``: Caddy web server with HTTPS on by default.
+* ``traefik``: Traefik reverse proxy with HTTPS on by default.
 
-Provided you have opted for Celery (via setting ``use_celery`` to ``y``) there are two more services:
+Provided you have opted for Celery (via setting ``use_celery`` to ``y``) there are three more services:
 
 * ``celeryworker`` running a Celery worker process;
-* ``celerybeat`` running a Celery beat process.
+* ``celerybeat`` running a Celery beat process;
+* ``flower`` running Flower_ (for more info, check out :ref:`CeleryFlower` instructions for local environment).
+
+.. _`Flower`: https://github.com/mher/flower
 
 
 Configuring the Stack
@@ -32,12 +35,25 @@ Configuring the Stack
 
 The majority of services above are configured through the use of environment variables. Just check out :ref:`envs` and you will know the drill.
 
-To obtain logs and information about crashes in a production setup, make sure that you have access to an external Sentry instance (e.g. by creating an account with `sentry.io`_), and set the ``DJANGO_SENTRY_DSN`` variable.
+To obtain logs and information about crashes in a production setup, make sure that you have access to an external Sentry instance (e.g. by creating an account with `sentry.io`_), and set the ``SENTRY_DSN`` variable. Logs of level `logging.ERROR` are sent as Sentry events. Therefore, in order to send a Sentry event use:
+
+.. code-block:: python
+
+    import logging
+    logging.error("This event is sent to Sentry", extra={"<example_key>": "<example_value>"})
+
+The `extra` parameter allows you to send additional information about the context of this error.
+
 
 You will probably also need to setup the Mail backend, for example by adding a `Mailgun`_ API key and a `Mailgun`_ sender domain, otherwise, the account creation view will crash and result in a 500 error when the backend attempts to send an email to the account owner.
 
 .. _sentry.io: https://sentry.io/welcome
 .. _Mailgun: https://mailgun.com
+
+
+.. warning::
+
+    .. include:: mailgun.rst
 
 
 Optional: Use AWS IAM Role for EC2 instance
@@ -56,21 +72,21 @@ SSL (Secure Sockets Layer) is a standard security technology for establishing an
 
 It is always better to deploy a site behind HTTPS and will become crucial as the web services extend to the IoT (Internet of Things). For this reason, we have set up a number of security defaults to help make your website secure:
 
-* If you are not using a subdomain of the domain name set in the project, then remember to put the your staging/production IP address in the ``DJANGO_ALLOWED_HOSTS`` environment variable (see :ref:`settings`) before you deploy your website. Failure to do this will mean you will not have access to your website through the HTTP protocol.
+* If you are not using a subdomain of the domain name set in the project, then remember to put your staging/production IP address in the ``DJANGO_ALLOWED_HOSTS`` environment variable (see :ref:`settings`) before you deploy your website. Failure to do this will mean you will not have access to your website through the HTTP protocol.
 
 * Access to the Django admin is set up by default to require HTTPS in production or once *live*.
 
-The Caddy web server used in the default configuration will get you a valid certificate from Lets Encrypt and update it automatically. All you need to do to enable this is to make sure that your DNS records are pointing to the server Caddy runs on.
+The Traefik reverse proxy used in the default configuration will get you a valid certificate from Lets Encrypt and update it automatically. All you need to do to enable this is to make sure that your DNS records are pointing to the server Traefik runs on.
 
-You can read more about this here at `Automatic HTTPS`_ in the Caddy docs.
+You can read more about this feature and how to configure it, at `Automatic HTTPS`_ in the Traefik docs.
 
-.. _Automatic HTTPS: https://caddyserver.com/docs/automatic-https
+.. _Automatic HTTPS: https://docs.traefik.io/configuration/acme/
 
 
 (Optional) Postgres Data Volume Modifications
 ---------------------------------------------
 
-Postgres is saving its database files to the ``postgres_data`` volume by default. Change that if you want something else and make sure to make backups since this is not done automatically.
+Postgres is saving its database files to the ``production_postgres_data`` volume by default. Change that if you want something else and make sure to make backups since this is not done automatically.
 
 
 Building & Running Production Stack
@@ -83,6 +99,10 @@ You will need to build the stack first. To do that, run::
 Once this is ready, you can run it with::
 
     docker-compose -f production.yml up
+
+To run the stack and detach the containers, run::
+
+    docker-compose -f production.yml up -d
 
 To run a migration, open up a second terminal and run::
 
@@ -105,7 +125,7 @@ If you want to scale your application, run::
    docker-compose -f production.yml scale django=4
    docker-compose -f production.yml scale celeryworker=2
 
-.. warning:: don't try to scale ``postgres``, ``celerybeat``, or ``caddy``.
+.. warning:: don't try to scale ``postgres``, ``celerybeat``, or ``traefik``.
 
 To see how your containers are doing run::
 
@@ -137,3 +157,4 @@ Move it to ``/etc/supervisor/conf.d/{{cookiecutter.project_slug}}.conf`` and run
 For status check, run::
 
     supervisorctl status
+

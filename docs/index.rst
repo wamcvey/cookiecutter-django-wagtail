@@ -17,14 +17,13 @@ Contents:
    developing-locally-docker
    settings
    linters
-   live-reloading-and-sass-compilation
+   testing
    deployment-on-pythonanywhere
    deployment-on-heroku
    deployment-with-docker
    docker-postgres-backups
    faq
    troubleshooting
-   my-favorite-cookie
 
 Indices and tables
 ==================
