@@ -35,10 +35,11 @@
     "GCP",
     "None"
   ],
+  "custom_bootstrap_compilation": "n",
+
   "use_compressor": "n",
 
-  "use_sentry_for_error_reporting": "y",
-  "use_wagtail": "y"
+  "use_wagtail": "y",
 
   "use_celery": "n",
   "use_mailhog": "n",

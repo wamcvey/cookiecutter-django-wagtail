@@ -12,10 +12,10 @@ from wagtail.core import urls as wagtail_urls
 
 urlpatterns = [
     # Django Admin, use {% raw %}{% url 'admin:index' %}{% endraw %}
-    url(settings.ADMIN_URL, admin.site.urls),
+    path(settings.ADMIN_URL, admin.site.urls),
     {% if cookiecutter.use_wagtail == 'y' -%}
-    url(r'^cms/', include(wagtailadmin_urls)),
-    url(r'^documents/', include(wagtaildocs_urls)),
+    path(r'cms/', include(wagtailadmin_urls)),
+    path(r'documents/', include(wagtaildocs_urls)),
    
     {%- endif %}
 
@@ -58,6 +58,6 @@ if settings.DEBUG:
 {% if cookiecutter.use_wagtail == 'y' -%}
 
 urlpatterns += [
-    url(r'', include(wagtail_urls)),
+    path(r'', include(wagtail_urls)),
 ]
 {%- endif %}
